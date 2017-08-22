@@ -9,7 +9,7 @@ from the source. Then weather data is fetched for the corresponding period
 and added to the bike data. Finally, this dataset is appended to an existing
 dataset or a new file created.
 
-### Status
+## Status
 
 **FUNCTIONAL**
 
@@ -20,9 +20,9 @@ errors, everything should work just fine.
 If you run into problems, they are most likely related to the bike data. 
 Please see section _Data sources_ for further discussion. 
 
-### Data sources
+## Data sources
 
-##### City bike data
+### City bike data
 
 City bike data is offered by HSL (Helsinki Regional Transport Authority). At
 the time of writing, the data is distributed under [Creative Commons 
@@ -52,7 +52,7 @@ _Ideally, this tool would allow for initial data gathering using the
 historical storage and then maintaining the data through the more robust and 
 official GraphQL API. You're welcome to implement this :)_
 
-##### Weather data
+### Weather data
 
 Weather data is gathered through FMI's (Finnish Meteorological Institute) 
 open data service. At the time of writing, they use the same licence as HSL 
@@ -73,7 +73,7 @@ _**Note:**_ _I'm not happy with my implementation of parsing WFS data (nor
 with WFS/owslib in general). I'd be extremely happy to hear about better 
 solutions._
 
-### Resulting dataset
+## Resulting dataset
 
 The resulting HDF5 file includes one key, `data`, which consists of a Pandas
 DataFrame with the following features as columns:
@@ -98,14 +98,14 @@ actually add around 150 rows to the datafile.)
 The bike data is recorded every minute resulting in roughly 216,000 rows/day
  ≈ 6.5M rows/month. 
 
-### Installation
+## Installation
 
-##### Development mode
+### Development mode
 
 To install in editable mode:
 `pip install -e /path/to/package`
 
-### Usage
+## Usage
 
 Update data, create new file if necessary:
 
@@ -118,7 +118,7 @@ Print information about current dataset:
 For more help about command line options, see `fillaridata --help` and/or
 `fillaridata <command> --help`.
 
-##### Alternative source (bike data)
+### Alternative source (bike data)
 
 To fetch bike data from an alternative source, use the option `-s` or 
 `--source` for `fillaridata update`.
@@ -129,7 +129,7 @@ do:
 
     fillaridata update --source=/path/to/source/folder/
 
-### TODO
+## TODO
 
 Here's a random TODO list of things that could be improved:
 
