@@ -100,10 +100,18 @@ The bike data is recorded every minute resulting in roughly 216,000 rows/day
 
 ## Installation
 
+I recommend creating a conda virtualenv and installing this program using pip:
+
+    $ conda create -n fillaridata
+    $ source activate fillaridata
+    $ conda install pip
+    $ pip install https://github.com/joonashak/fillaridata/archive/master.zip
+
 ### Development mode
 
 To install in editable mode:
-`pip install -e /path/to/package`
+
+    pip install -e /path/to/package
 
 ## Usage
 
