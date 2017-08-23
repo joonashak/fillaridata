@@ -15,7 +15,9 @@ setup(
         "pandas",
         "bs4",
         "requests",
-        "owslib"
+        "owslib",
+        "lxml",
+        "tables"
     ],
     entry_points="""
         [console_scripts]
