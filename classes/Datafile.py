@@ -68,6 +68,12 @@ class Datafile:
         store.data.reset_index(inplace=True)
         store.close()
 
+        # Log the changes that we just wrote
+        rows = len(new_data)
+        dates = len(new_data.index.levels[0])
+        logging.info("Wrote {:,} rows ({:,} unique timestamps) to {}"
+                     .format(rows, dates, click.format_filename(self.path)))
+
     def print_info(self):
         """Print information about current data file."""
         if self.data is None:

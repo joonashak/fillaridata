@@ -47,10 +47,10 @@ def update_data(datafile, config, limit, batch, source):
         filenames = filenames[:last]
 
     slices = np.arange(0, len(filenames), batch)
-    slices = np.append(slices, len(filenames)-1)
 
-    for stop in slices[1:]:
-        start = stop - batch
+    for i, start in enumerate(slices):
+        stop = slices[i + 1] if i < len(slices) - 1 else len(filenames) - 1
+
         new_data = __get_bike_data(source, filenames[start:stop])
         new_data = add_weather_data(new_data, api_key)
         datafile.update(new_data)

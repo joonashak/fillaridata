@@ -141,7 +141,6 @@ do:
 
 Here's a random TODO list of things that could be improved:
 
-* Add logging and info output about successful execution.
 * Add HSL's GraphQL API as a source.
 * Refactor logging and output functionality to its own module.
 * Add option to fetch only bike data.
