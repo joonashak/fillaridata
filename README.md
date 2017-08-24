@@ -137,6 +137,17 @@ do:
 
     fillaridata update --source=/path/to/source/folder/
 
+### Memory issues
+
+It's quite easy to run into memory issues in limited environments, such as 
+VPS's with a gig or two of RAM, as this tool loads the whole datafile into 
+memory. Use the `--first` and `--limit` options in combination to create 
+smaller files. Limiting the files to 20,000 timestamps should be small 
+enough to run comfortably on 2GB RAM.
+
+For now, this is very manual and the file needs to be switched by hand every
+two weeks or so. 
+
 ## TODO
 
 Here's a random TODO list of things that could be improved:
@@ -147,6 +158,12 @@ Here's a random TODO list of things that could be improved:
 * Add progress bar or another way of keeping the user informed, e.g., during
  manually creating the initial file.
 * My use of "date" and "row" is probably very confusing and should be 
-clarified.
+clarified. _(Slowly migrating to using "timestamp".)_
+* Automatic splitting into multiple datafiles for easier use in low-memory 
+environments.
 
 You're welcome to help :)
+
+## Changes
+
+* **2017-08-24:** Added `--first` option to ignore earlier data.

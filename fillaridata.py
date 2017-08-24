@@ -56,8 +56,10 @@ def cli(file, logfile):
 @click.option("--source", "-s", type=click.Path(),
               default="http://dev.hsl.fi/tmp/citybikes/",
               help="Path to source data.")
-def update(limit, batch, source):
-    update_data(df, config, limit, batch, source)
+@click.option("--first", type=str, default="2016-01-01 00:00:00",
+              help="First timestamp to include, format: %Y-%m-%d- %H:%M:%S")
+def update(limit, batch, source, first):
+    update_data(df, config, first, limit, batch, source)
 
 
 # COMMAND: info

@@ -20,7 +20,7 @@ from requests import get
 from modules.fmi import add_weather_data
 
 
-def update_data(datafile, config, limit, batch, source):
+def update_data(datafile, config, first, limit, batch, source):
     """Updates the datafile with new data.
 
     Data after the last entry in *datafile* is fetched and appended to
@@ -39,26 +39,20 @@ def update_data(datafile, config, limit, batch, source):
     files named in the format above.
     :return: None
     """
-    filenames = __get_links(source, datafile.last_date())
     api_key = config.value("FMI", "api_key")
 
-    if limit > 0:
-        last = limit + 1 if limit < len(filenames) else len(filenames)
-        filenames = filenames[:last]
+    filenames = __get_filenames(source, datafile.last_date())
+    batches = __trim_split_filenames(filenames, first, limit, batch)
 
-    slices = np.arange(0, len(filenames), batch)
-
-    for i, start in enumerate(slices):
-        stop = slices[i + 1] if i < len(slices) - 1 else len(filenames) - 1
-
-        new_data = __get_bike_data(source, filenames[start:stop])
+    for filenames in batches:
+        new_data = __get_bike_data(source, filenames)
         new_data = add_weather_data(new_data, api_key)
         datafile.update(new_data)
 
     return None
 
 
-def __get_links(source, start_after):
+def __get_filenames(source, start_after):
     """Return a list of filenames for fetching new data.
 
     Returns a list of filenames parsed from *source*. Only names of the
@@ -146,3 +140,35 @@ def __get_bike_data(source, files):
                                bold=True))
 
     return data
+
+
+def __trim_split_filenames(filenames, first, limit, batch):
+    """Apply --first, --limit and --batch options to list of filenames.
+
+    Takes a list of filenames and applies the mentioned command line
+    options to that list. Entries corresponding to timestamps before
+    *first* are dropped and the list is truncated to maximum length of
+    *limit*. The resulting list is then split into lists containing at
+    maximum *batch* members and the resulting list of lists is
+    returned.
+
+    :param filenames: List of properly formatted filenames.
+    :param first: First timestamp to include in result.
+    :param limit: Maximum number of filenames in result.
+    :param batch: Size limit for sublists.
+    :return: List of lists of filename strings.
+    """
+
+    # Apply --first option by dropping earlier filenames
+    date_format = "stations_%Y%m%dT%H%M%SZ"
+    filenames = \
+        [f for f in filenames
+            if pd.to_datetime(f, format=date_format) >= pd.to_datetime(first)]
+
+    # Apply --limit option by truncating the list of filenames
+    if limit > 0:
+        last = limit if limit < len(filenames) else len(filenames)
+        filenames = filenames[:last]
+
+    # Split to batches (--batch)
+    return [filenames[x:x + batch] for x in range(0, len(filenames), batch)]
