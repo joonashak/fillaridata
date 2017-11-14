@@ -21,7 +21,7 @@ from modules.data import update_data
 @click.option("--file", "-f", type=click.Path(), default="./data.h5",
               help="Path to data file.")
 @click.option("--logfile", "-l", type=click.Path(),
-              default=user_log_dir("fillaridata.log"),
+              default="fillaridata.log",
               help="Path to log file.")
 def cli(file, logfile):
     """Initialise program with given parameters."""

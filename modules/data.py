@@ -46,6 +46,7 @@ def update_data(datafile, config, first, limit, batch, source):
 
     for filenames in batches:
         new_data = __get_bike_data(source, filenames)
+        new_data = __generate_missing_rows(new_data)
         new_data = add_weather_data(new_data, api_key)
         datafile.update(new_data)
 
@@ -126,7 +127,7 @@ def __get_bike_data(source, files):
         try:
             new_data = pd.read_json(full_path)
             new_data = new_data.result.apply(pd.Series)
-            new_data['date_utc'] = pd.Timestamp(file[9:])
+            new_data['date_utc'] = pd.Timestamp(file[9:]).replace(second=0)
             new_data.set_index(['date_utc', 'name'], inplace=True)
             data = data.append(new_data)
         except:
@@ -172,3 +173,22 @@ def __trim_split_filenames(filenames, first, limit, batch):
 
     # Split to batches (--batch)
     return [filenames[x:x + batch] for x in range(0, len(filenames), batch)]
+
+
+def __generate_missing_rows(data):
+    """Generate missing rows to ensure *data* has a row for each minute.
+
+    :param: data: Pandas DataFrame with a proper MultiIndex.
+    :return: Input dataframe appended with missing rows.
+    """
+
+    start = data.index.min()[0]
+    stop = data.index.max()[0]
+
+    # New index
+    date_utc = pd.date_range(start, stop, freq="min")
+    name = data.index.levels[1].values
+    new_index = pd.MultiIndex.from_product([date_utc, name],
+                                           names=["date_utc", "name"])
+
+    return data.reindex(index=new_index)
