@@ -55,7 +55,7 @@ class Datafile:
             logging.info("New data file created at {}"
                          .format(click.format_filename(self.path)))
 
-        store = pd.HDFStore(self.path)
+        store = pd.HDFStore(self.path, complevel=9, complib="zlib")
 
         if "/data" not in store.keys():
             data = pd.DataFrame()
